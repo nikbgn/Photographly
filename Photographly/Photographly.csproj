@@ -13,10 +13,18 @@
     <PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="6.0.10" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="6.0.10" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="6.0.10" />
+    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="6.0.11" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\Photographly.Core\Photographly.Core.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Areas\Photography\Controllers\" />
+    <Folder Include="Areas\Photography\Data\" />
+    <Folder Include="Areas\Photography\Models\" />
+    <Folder Include="Areas\Photography\Views\" />
   </ItemGroup>
 
 </Project>
