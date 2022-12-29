@@ -1,0 +1,41 @@
+﻿@{
+	ViewData["Title"] = "Photography Management";
+	var AddNewPostCard = new PhotographyManagementCardModel
+			{
+				ButtonValue = "Create a new post",
+				CardText = "Created a new photograph? Share it with everyone!",
+				FormArea = "Photography",
+				FormController = "Home",
+				FormAction = "Add"
+			};
+
+	var MyPostsCard = new PhotographyManagementCardModel
+			{
+				ButtonValue = "View your posts",
+				CardText = "Want to see you posts again? Edit them, delete them? No problem!",
+				FormArea = "Photography",
+				FormController = "Home",
+				FormAction = "MyPosts"
+			};
+}
+
+
+<div class="container text-center">
+	<section>
+		<div class="album mt-5 mb-2 push">
+			<h1>Welcome to the photography management area</h1>
+			<div class="container">
+				<div class="row mb-2">
+					<div class="col m-1">
+						<partial name="_PhotographyAreaManagementCardPartial"
+								 model="AddNewPostCard" />
+					</div>
+					<div class="col m-1">
+						<partial name="_PhotographyAreaManagementCardPartial"
+								 model="MyPostsCard" />
+					</div>
+				</div>
+			</div>
+		</div>
+	</section>
+</div>

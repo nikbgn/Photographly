@@ -1,0 +1,14 @@
+﻿@model PhotographyManagementCardModel
+
+<div class="card shadow-sm h-100">
+	<div class="card-body">
+		<p>@Model.CardText</p>
+		<div class="d-flex justify-content-center align-items-center">
+			<div class="btn-group">
+				<form asp-area="@Model.FormArea" asp-controller="@Model.FormController" asp-action="@Model.FormAction" method="get">
+					<input type="submit" class="btn btn-lg btn-warning m-1 text-white" value="@Model.ButtonValue" />
+				</form>
+			</div>
+		</div>
+	</div>
+</div>

@@ -9,5 +9,15 @@
         {
             return View();
         }
+
+        public IActionResult Add()
+        {
+            return View();
+        }
+
+        public IActionResult MyPosts()
+        {
+            return View();
+        }
     }
 }

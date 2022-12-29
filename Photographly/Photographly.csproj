@@ -21,10 +21,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Areas\Photography\Controllers\" />
     <Folder Include="Areas\Photography\Data\" />
-    <Folder Include="Areas\Photography\Models\" />
-    <Folder Include="Areas\Photography\Views\" />
   </ItemGroup>
 
 </Project>
