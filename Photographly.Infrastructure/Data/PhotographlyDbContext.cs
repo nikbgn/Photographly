@@ -5,7 +5,7 @@
 
 	using Photographly.Infrastructure.Data.Models;
 
-	public class PhotographlyDbContext : IdentityDbContext
+	public class PhotographlyDbContext : IdentityDbContext<User>
 	{
 		public PhotographlyDbContext(DbContextOptions<PhotographlyDbContext> options)
 			: base(options)

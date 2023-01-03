@@ -5,17 +5,10 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace Photographly.Infrastructure.Migrations
 {
-    public partial class AddPostsAndPostComments : Migration
+    public partial class Fix : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.AddColumn<string>(
-                name: "Discriminator",
-                table: "AspNetUsers",
-                type: "nvarchar(max)",
-                nullable: false,
-                defaultValue: "");
-
             migrationBuilder.CreateTable(
                 name: "Posts",
                 columns: table => new
@@ -110,10 +103,6 @@ namespace Photographly.Infrastructure.Migrations
 
             migrationBuilder.DropTable(
                 name: "Posts");
-
-            migrationBuilder.DropColumn(
-                name: "Discriminator",
-                table: "AspNetUsers");
         }
     }
 }

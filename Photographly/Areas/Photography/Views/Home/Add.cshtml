@@ -1,5 +1,30 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
+﻿@model CreatePostViewModel
+
 @{
+	ViewData["Title"] = "Create a new post";
+}
+
+<div asp-validation-summary="ModelOnly" class="mt-3 text-white alert alert-dismissible alert-danger"></div>
+
+<form method="post" enctype="multipart/form-data" name="PostImage">
+	<div class="mb-3">
+		<label asp-for="@Model.Title" class="form-label"></label>
+		<input asp-for="@Model.Title" class="form-control" aria-required="true" />
+		<span asp-validation-for="Title" class="text-danger"></span>
+	</div>
+	<div class="mb-3">
+		<label asp-for="@Model.Description" class="form-label"></label>
+		<input asp-for="@Model.Description" class="form-control" aria-required="true" />
+		<span asp-validation-for="Description" class="text-danger"></span>
+	</div>
+	<div class="mb-3">
+		<input accept=".png,.jpg,.jpeg" asp-for="@Model.PostImage" type="file" class="form-control" onchange="filecheck(this)" />
+	</div>
+	<div class="mb-3">
+		<input class="btn btn-success" type="submit" value="Add my great post!" />
+	</div>
+</form>
+
+@section Scripts {
+	<partial name="_ValidationScriptsPartial" />
 }

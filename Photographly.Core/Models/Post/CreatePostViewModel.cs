@@ -6,19 +6,21 @@
 	using Microsoft.AspNetCore.Http;
 	using Microsoft.AspNetCore.Mvc;
 
-	public class CreateRecipeViewModel
+	public class CreatePostViewModel
 	{
 		[Required]
 		public Guid Id { get; set; }
 
 		[Required]
+		[Display(Name = "Title for your new post 🔥")]
 		public string Title { get; set; } = null!;
 
 		[Required]
+		[Display(Name = "Caption for your new post ⭐")]
 		public string Description { get; set; } = null!;
 
 		[FromForm]
-		public IFormFile RecipeImage { get; set; }
+		public IFormFile PostImage { get; set; }
 
 		[Required]
 		public DateTime CreatedOn { get; set; }
