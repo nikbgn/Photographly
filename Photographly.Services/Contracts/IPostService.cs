@@ -26,5 +26,19 @@
 		/// <returns></returns>
 
 		public Task DeletePostAsync(Guid postId);
+
+		/// <summary>
+		/// Edits a post.
+		/// </summary>
+		/// <param name="model">Information about the post.</param>
+
+		public Task EditPostAsync(CreatePostViewModel model);
+
+		/// <summary>
+		/// Gets a post by id.
+		/// </summary>
+		/// <param name="postId">Post's id.</param>
+
+		public Task<PostServiceModel> GetPostAsync(Guid postId);
 	}
 }

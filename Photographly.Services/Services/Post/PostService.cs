@@ -157,6 +157,79 @@
 				throw new ArgumentException("Invalid post ID!");
 			}
 		}
+
+		/// <summary>
+		/// Edits a post.
+		/// </summary>
+		/// <param name="model">Information about the post.</param>
+
+		public async Task EditPostAsync(CreatePostViewModel model) 
+		{
+			var post = await _context.Posts.FirstOrDefaultAsync(p => p.Id == model.Id);
+
+			if (post == null)
+			{
+				throw new ArgumentException("The given post id was invalid.");
+			}
+
+			try
+			{
+
+				post.Id = model.Id;
+				post.Title = model.Title;
+				post.Description = model.Description;
+
+				if (model.PostImage != null)
+				{
+
+					string[] acceptedExtensions = { ".png", ".jpg", ".jpeg" };
+
+					if (!acceptedExtensions.Contains(Path.GetExtension(model.PostImage.FileName)))
+					{
+						throw new FormatException("Invalid image format.");
+					}
+
+					using MemoryStream ms = new MemoryStream();
+					await model.PostImage.CopyToAsync(ms);
+
+					if (ms.Length > 2097152)
+					{
+						throw new Exception("The size of the image you tried to upload is too large!");
+					}
+
+					post.PostImage = ms.ToArray();
+				}
+				await _context.SaveChangesAsync();
+			}
+			catch (Exception ex)
+			{
+				throw new ApplicationException(ex.Message);
+			}
+		}
+
+		/// <summary>
+		/// Gets a post by id.
+		/// </summary>
+		/// <param name="postId">Post's id.</param>
+
+		public async Task<PostServiceModel> GetPostAsync(Guid postId)
+		{
+			var post = await _context.Posts.FirstOrDefaultAsync(p => p.Id == postId);
+			if (post == null)
+			{
+				throw new ArgumentException("The given recipe id was invalid.");
+			}
+
+			return new PostServiceModel()
+			{
+				Id = post.Id,
+				Title = post.Title,
+				Description = post.Description,
+				PostImage = post.PostImage,
+				CreatedOn = post.CreatedOn,
+				LikesCount = post.LikesCount
+			};
+		}
 	}
 
 }
