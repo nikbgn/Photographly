@@ -18,5 +18,13 @@
 		/// <param name="userId">User's ID</param>
 		
 		public Task<IEnumerable<PostServiceModel>> GetMyPostsAsync(string userId);
+
+		/// <summary>
+		/// Deletes a post
+		/// </summary>
+		/// <param name="postId">Post id</param>
+		/// <returns></returns>
+
+		public Task DeletePostAsync(Guid postId);
 	}
 }

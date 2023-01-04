@@ -2,6 +2,7 @@
 {
 	using System.Collections.Generic;
 	using System.Threading.Tasks;
+
 	using Microsoft.EntityFrameworkCore;
 
 	using Photographly.Core.Models.Post;
@@ -121,5 +122,41 @@
 				throw new ApplicationException("Something went wrong in getting user's posts.");
 			}
 		}
+
+
+		/// <summary>
+		/// Deletes a post
+		/// </summary>
+		/// <param name="postId">Post id</param>
+		/// <returns></returns>
+
+		public async Task DeletePostAsync(Guid postId)
+		{
+
+			var post = await _context.Posts.FirstOrDefaultAsync(p => p.Id == postId);
+			var postComments = _context.PostComments.Where(pc => pc.PostId == postId).ToList();
+			if (post != null)
+			{
+				try
+				{
+					foreach (var comment in postComments)
+					{
+						_context.PostComments.Remove(comment);
+					}
+					_context.Posts.Remove(post);
+					await _context.SaveChangesAsync();
+				}
+				catch (Exception ex)
+				{
+
+					throw new ApplicationException("Failed getting the post by id.", ex);
+				}
+			}
+			else
+			{
+				throw new ArgumentException("Invalid post ID!");
+			}
+		}
 	}
+
 }

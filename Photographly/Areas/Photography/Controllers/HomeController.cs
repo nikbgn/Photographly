@@ -1,19 +1,25 @@
 ﻿namespace Photographly.Areas.Photography.Controllers
 {
-    using Microsoft.AspNetCore.Mvc;
+	using Microsoft.AspNetCore.Mvc;
+	using Microsoft.Extensions.Logging;
 
 	using Photographly.Core.Models.Post;
 	using Photographly.Extensions;
 	using Photographly.Services.Contracts;
+	using Photographly.Services.Services.CheckerService;
 
 	[Area("Photography")]
     public class HomeController : Controller
     {
 		private readonly IPostService _postService;
+		private readonly ICheckerService _checkerService;
+		private readonly ILogger<HomeController> _logger;
 
-		public HomeController(IPostService postService)
+		public HomeController(IPostService postService, ICheckerService checkerService, ILogger<HomeController> logger)
 		{
 			_postService = postService;
+			_checkerService = checkerService;
+			_logger = logger;
 		}
 
         public IActionResult Index()
@@ -54,7 +60,23 @@
 				ModelState.AddModelError("", ex.Message);
 				return View(model);
 			}
-
 		}
+
+		[Route("/Photography/Home/Delete/{postId}")]
+		public async Task<IActionResult> Delete(Guid postId)
+		{
+			try
+			{
+				bool verify = await _checkerService.CheckIfUserIsPostAuthor(User.Id(), postId);
+				if (!verify)
+				{
+					throw new Exception("User cannot delete other user's posts.");
+				}
+				await _postService.DeletePostAsync(postId);
+				return RedirectToAction(nameof(Index));
+			}
+			catch (Exception ex) { _logger.LogError($"ERROR MESSAGE: {ex.Message}"); return BadRequest(); }
+		}
+
 	}
 }

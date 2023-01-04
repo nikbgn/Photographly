@@ -7,10 +7,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Contracts\" />
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="..\Photographly.Core\Photographly.Core.csproj" />
   </ItemGroup>
 
