@@ -1,5 +1,6 @@
 ﻿namespace Photographly.Services.Services.Post
 {
+	using System.Collections.Generic;
 	using System.Threading.Tasks;
 	using Microsoft.EntityFrameworkCore;
 
@@ -81,6 +82,44 @@
 			await _context.SaveChangesAsync();
 
 
+		}
+
+		/// <summary>
+		/// Gets user's posts.
+		/// </summary>
+		/// <param name="userId">User's ID</param>
+
+		public async Task<IEnumerable<PostServiceModel>> GetMyPostsAsync(string userId)
+		{
+
+			var userPosts = await _context.Users
+				.Where(u => u.Id == userId)
+				.Include(u => u.UsersPosts)
+				.ThenInclude(p => p.Post)
+				.FirstOrDefaultAsync();
+
+			if (userPosts == null)
+			{
+				throw new ArgumentException("Invalid user id!");
+			}
+
+			try
+			{
+				return userPosts.UsersPosts
+					.Select(p => new PostServiceModel
+					{
+						Id = p.PostId,
+						Title = p.Post.Title,
+						Description = p.Post.Description,
+						LikesCount = p.Post.LikesCount,
+						CreatedOn = p.Post.CreatedOn,
+						PostImage = p.Post.PostImage
+					}).ToList();
+			}
+			catch (Exception)
+			{
+				throw new ApplicationException("Something went wrong in getting user's posts.");
+			}
 		}
 	}
 }

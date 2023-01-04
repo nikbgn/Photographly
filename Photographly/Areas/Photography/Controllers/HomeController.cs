@@ -21,10 +21,12 @@
             return View();
         }
 
-        public IActionResult MyPosts()
-        {
-            return View();
-        }
+		public async Task<IActionResult> MyPosts()
+		{
+			var userId = User.Id();
+			var posts = await _postService.GetMyPostsAsync(userId);
+			return View(posts);
+		}
 
 		[HttpGet]
 		public IActionResult Add()
