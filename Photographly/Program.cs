@@ -20,7 +20,7 @@ builder.Services.AddDefaultIdentity<User>(options =>
 })
 	.AddEntityFrameworkStores<PhotographlyDbContext>();
 builder.Services.AddControllersWithViews();
-
+builder.Services.AddApplicationServices();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

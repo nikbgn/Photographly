@@ -2,15 +2,21 @@
 {
     using Microsoft.AspNetCore.Mvc;
 
-    [Area("Photography")]
+	using Photographly.Core.Models.Post;
+	using Photographly.Extensions;
+	using Photographly.Services.Contracts;
+
+	[Area("Photography")]
     public class HomeController : Controller
     {
-        public IActionResult Index()
-        {
-            return View();
-        }
+		private readonly IPostService _postService;
 
-        public IActionResult Add()
+		public HomeController(IPostService postService)
+		{
+			_postService = postService;
+		}
+
+        public IActionResult Index()
         {
             return View();
         }
@@ -19,5 +25,34 @@
         {
             return View();
         }
-    }
+
+		[HttpGet]
+		public IActionResult Add()
+		{
+			var model = new CreatePostViewModel();
+			return View(model);
+		}
+
+		[HttpPost]
+		public async Task<IActionResult> Add(CreatePostViewModel model)
+		{
+			try
+			{
+				if (!ModelState.IsValid)
+				{
+					return View(model);
+				}
+
+				var userId = User.Id();
+				await _postService.CreatePostAsync(model, userId);
+				return RedirectToAction(nameof(Index));
+			}
+			catch (Exception ex)
+			{
+				ModelState.AddModelError("", ex.Message);
+				return View(model);
+			}
+
+		}
+	}
 }

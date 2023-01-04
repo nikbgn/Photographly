@@ -18,6 +18,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Photographly.Core\Photographly.Core.csproj" />
+    <ProjectReference Include="..\Photographly.Services\Photographly.Services.csproj" />
   </ItemGroup>
 
   <ItemGroup>
