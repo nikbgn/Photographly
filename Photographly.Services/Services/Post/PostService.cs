@@ -230,6 +230,44 @@
 				LikesCount = post.LikesCount
 			};
 		}
+
+		/// <summary>
+		/// Gets all posts.
+		/// </summary>
+		/// <param name="searchTerm">Search term.</param>
+		/// <param name="currentPage">Current page.</param>
+		/// <param name="postsPerPage">Posts per page.</param>
+
+		public PostQueryServiceModel All(string searchTerm = null, int currentPage = 1, int postsPerPage = 1)
+		{
+			var postsQuery = _context.Posts.AsQueryable();
+			if (!string.IsNullOrWhiteSpace(searchTerm))
+			{
+				postsQuery = postsQuery.Where(p => p.Title.ToLower().Contains(searchTerm.ToLower()));
+			}
+
+			var posts = postsQuery
+				.Skip((currentPage - 1) * postsPerPage)
+				.Take(postsPerPage)
+				.Select(p => new PostServiceModel
+				{
+					Id = p.Id,
+					Title = p.Title,
+					Description = p.Description,
+					CreatedOn = p.CreatedOn,
+					PostImage = p.PostImage,
+					LikesCount = p.LikesCount
+				})
+				.ToList();
+
+			var totalPosts = postsQuery.Count();
+
+			return new PostQueryServiceModel()
+			{
+				TotalPostsCount = totalPosts,
+				Posts = posts
+			};
+		}
 	}
 
 }

@@ -1,0 +1,33 @@
+﻿@model PostServiceModel
+
+
+
+<div class="col">
+	<div class="card border-secondary shadow-sm">
+		<img src="data:image;base64,@Convert.ToBase64String(Model.PostImage)" class="card-img-top" alt="Recipe image thumbnail.">
+		<div class="card-body">
+			<h4>@Model.Title</h4>
+			<p class="card-text" style="white-space: nowrap; text-overflow: ellipsis; overflow:hidden;">
+				@Model.Description
+			</p>
+			<div>
+
+				<p class="text-muted">
+					Date: @Model.CreatedOn
+				</p>
+				<p class="text-muted">
+					Likes: @Model.LikesCount
+				</p>
+			</div>
+			<div>
+				<form method="get">
+					<button type="submit" class="btn btn-outline-primary" asp-route-postId="@Model.Id" asp-controller="Home" asp-action="ViewPost">Like 💖</button>
+					<button type="submit" class="btn btn-outline-primary" asp-route-postId="@Model.Id" asp-controller="Home" asp-action="ViewPost">Comment 🌠</button>
+					<button type="submit" class="btn btn-outline-primary" asp-route-postId="@Model.Id" asp-controller="Home" asp-action="ViewPost">View 🌟</button>
+				</form>
+			</div>
+			<div>
+			</div>
+		</div>
+	</div>
+</div>
