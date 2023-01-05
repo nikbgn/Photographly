@@ -4,6 +4,7 @@
 	using System.Threading.Tasks;
 
 	using Microsoft.EntityFrameworkCore;
+	using Microsoft.Extensions.Logging;
 
 	using Photographly.Core.Models.Post;
 	using Photographly.Infrastructure.Data;
@@ -214,7 +215,7 @@
 
 		public async Task<ViewPostViewModel> GetPostAsync(Guid postId)
 		{
-			var post = await _context.Posts.Include(p => p.PostComments).FirstOrDefaultAsync(p => p.Id == postId);
+			var post = await _context.Posts.Include(p => p.PostComments).ThenInclude(p => p.Author).FirstOrDefaultAsync(p => p.Id == postId);
 			if (post == null)
 			{
 				throw new ArgumentException("The given post id was invalid.");
@@ -379,6 +380,49 @@
 
 			return false;
 
+
+		}
+
+
+		/// <summary>
+		/// Adds a comment to a post.
+		/// </summary>
+		/// <param name="model">Information about the comment.</param>
+		/// <param name="authorId">User Id of the author of the comment.</param>
+		/// <param name="postId">Post id.</param>
+
+		public async Task AddComment(PostCommentModel model, string authorId, Guid postId)
+		{
+			var author = await _context.Users.FirstOrDefaultAsync(u => u.Id == authorId);
+			var post = await _context.Posts.FirstOrDefaultAsync(p => p.Id == postId);
+
+			if (post != null && author != null)
+			{
+				try
+				{
+					var comment = new PostComment()
+					{
+						CommentText = model.CommentText,
+						AuthorId = authorId,
+						PostId = postId,
+						CreatedOn = DateTime.Now,
+						Author = author,
+						Post = post
+					};
+
+					await _context.PostComments.AddAsync(comment);
+					await _context.SaveChangesAsync();
+				}
+				catch (Exception ex)
+				{
+					throw new ApplicationException("Adding a comment to the post failed.", ex);
+				}
+
+			}
+			else
+			{
+				throw new ArgumentNullException("Invalid author id or blog post id.");
+			}
 
 		}
 	}

@@ -75,5 +75,14 @@
 		/// <param name="postId">Post Id.</param>
 
 		public Task<bool> PostIsLikedByUser(string userId, Guid postId);
+
+		/// <summary>
+		/// Adds a comment to a post.
+		/// </summary>
+		/// <param name="model">Information about the comment.</param>
+		/// <param name="authorId">User Id of the author of the comment.</param>
+		/// <param name="postId">Post id.</param>
+
+		public Task AddComment(PostCommentModel model, string authorId, Guid postId);
 	}
 }

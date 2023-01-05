@@ -4,6 +4,7 @@
 
 	using Microsoft.AspNetCore.Authorization;
 	using Microsoft.AspNetCore.Mvc;
+	using Microsoft.Extensions.Logging;
 
 	using Photographly.Core.Models.Post;
 	using Photographly.Extensions;
@@ -53,7 +54,7 @@
 				await _postService.RemoveLikeFromPost(User.Id(), postId);
 			}
 
-			return RedirectToAction(nameof(ViewPost));
+			return RedirectToAction(nameof(ViewPost), new { postId });
 		}
 
 		[Authorize]
@@ -63,6 +64,17 @@
 		{
 			var post = await _postService.GetPostAsync(postId);
 			return View(post);
+		}
+
+		[Authorize]
+		public async Task<IActionResult> AddComment(PostCommentModel model, string authorId, Guid postId)
+		{
+
+			authorId = User.Id();
+			await _postService.AddComment(model, authorId, postId);
+			return RedirectToAction(nameof(ViewPost), new { postId });
+
+
 		}
 
 		public IActionResult Privacy()
