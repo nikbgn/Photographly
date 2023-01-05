@@ -6,6 +6,7 @@
 	using Microsoft.AspNetCore.Mvc;
 
 	using Photographly.Core.Models.Post;
+	using Photographly.Extensions;
 	using Photographly.Models;
 	using Photographly.Services.Contracts;
 
@@ -33,6 +34,35 @@
 			query.Posts = posts.Posts;
 
 			return View(query);
+		}
+
+		[Authorize]
+		[HttpGet]
+		[Route("/Home/LikePost/{postId}")]
+		public async Task<IActionResult> LikePost(Guid postId)
+		{
+			bool verifyNotLikedYet = await _postService.PostIsLikedByUser(User.Id(), postId);
+			//If user clicks like on a post that is already liked, we accept that the user would like to remove his like.
+
+			if (!verifyNotLikedYet)
+			{
+				await _postService.AddLikeToPost(User.Id(), postId);
+			}
+			else
+			{
+				await _postService.RemoveLikeFromPost(User.Id(), postId);
+			}
+
+			return RedirectToAction(nameof(ViewPost));
+		}
+
+		[Authorize]
+		[HttpGet]
+		[Route("/Home/ViewPost/{postId}")]
+		public async Task<IActionResult> ViewPost(Guid postId)
+		{
+			var post = await _postService.GetPostAsync(postId);
+			return View(post);
 		}
 
 		public IActionResult Privacy()

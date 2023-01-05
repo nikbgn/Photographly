@@ -163,7 +163,7 @@
 		/// </summary>
 		/// <param name="model">Information about the post.</param>
 
-		public async Task EditPostAsync(CreatePostViewModel model) 
+		public async Task EditPostAsync(CreatePostViewModel model)
 		{
 			var post = await _context.Posts.FirstOrDefaultAsync(p => p.Id == model.Id);
 
@@ -212,22 +212,23 @@
 		/// </summary>
 		/// <param name="postId">Post's id.</param>
 
-		public async Task<PostServiceModel> GetPostAsync(Guid postId)
+		public async Task<ViewPostViewModel> GetPostAsync(Guid postId)
 		{
-			var post = await _context.Posts.FirstOrDefaultAsync(p => p.Id == postId);
+			var post = await _context.Posts.Include(p => p.PostComments).FirstOrDefaultAsync(p => p.Id == postId);
 			if (post == null)
 			{
-				throw new ArgumentException("The given recipe id was invalid.");
+				throw new ArgumentException("The given post id was invalid.");
 			}
 
-			return new PostServiceModel()
+			return new ViewPostViewModel()
 			{
 				Id = post.Id,
 				Title = post.Title,
 				Description = post.Description,
 				PostImage = post.PostImage,
 				CreatedOn = post.CreatedOn,
-				LikesCount = post.LikesCount
+				LikesCount = post.LikesCount,
+				PostComments = post.PostComments
 			};
 		}
 
@@ -267,6 +268,118 @@
 				TotalPostsCount = totalPosts,
 				Posts = posts
 			};
+		}
+
+
+		/// <summary>
+		/// Allows a user to like a post.
+		/// </summary>
+		/// <param name="userId">User Id.</param>
+		/// <param name="postId">Post Id.</param>
+
+		public async Task AddLikeToPost(string userId, Guid postId)
+		{
+			try
+			{
+				var user = await _context.Users
+					.Where(u => u.Id == userId)
+					.Include(u => u.UsersPosts)
+					.ThenInclude(p => p.Post)
+					.FirstOrDefaultAsync();
+
+				var post = await _context.Posts.FirstOrDefaultAsync(p => p.Id == postId);
+
+				if (user == null || post == null)
+				{
+					throw new ArgumentException("Invalid user id or post id.");
+				}
+
+				post.LikesCount += 1;
+
+				var userLike = new UserLikes()
+				{
+					PostId = post.Id,
+					Post = post,
+					UserId = user.Id,
+					User = user
+				};
+
+				user.UsersLikes.Add(userLike);
+				await _context.SaveChangesAsync();
+			}
+			catch (Exception ex)
+			{
+
+				throw new Exception(ex.Message);
+			}
+		}
+
+		/// <summary>
+		/// Allows a user to remove his like from a post.
+		/// </summary>
+		/// <param name="userId">User Id.</param>
+		/// <param name="postId">Post Id.</param>
+
+		public async Task RemoveLikeFromPost(string userId, Guid postId)
+		{
+			try
+			{
+				var user = await _context.Users
+					.Where(u => u.Id == userId)
+					.Include(u => u.UsersLikes)
+					.Include(u => u.UsersPosts)
+					.ThenInclude(p => p.Post)
+					.FirstOrDefaultAsync();
+
+				var post = await _context.Posts.FirstOrDefaultAsync(p => p.Id == postId);
+
+				if (user == null || post == null)
+				{
+					throw new ArgumentException("Invalid user id or post id.");
+				}
+
+				post.LikesCount -= 1;
+
+				var userLike = user.UsersLikes.FirstOrDefault(ul => ul.PostId == postId);
+
+				user.UsersLikes.Remove(userLike!);
+				await _context.SaveChangesAsync();
+			}
+			catch (Exception ex)
+			{
+				throw new Exception(ex.Message);
+			}
+		}
+
+		/// <summary>
+		/// Checks if the post is liked by a specific user.
+		/// </summary>
+		/// <param name="userId">User Id.</param>
+		/// <param name="postId">Post Id.</param>
+
+		public async Task<bool> PostIsLikedByUser(string userId, Guid postId)
+		{
+			var userLikes = await _context.Users
+					.Where(u => u.Id == userId)
+					.Include(u => u.UsersLikes)
+					.ThenInclude(p => p.Post)
+					.FirstOrDefaultAsync();
+
+			var post = await _context.Posts.FirstOrDefaultAsync(p => p.Id == postId);
+
+			if (userLikes == null || post == null)
+			{
+				throw new ArgumentException("Invalid user id or post id.");
+			}
+
+			if(userLikes.UsersLikes.Any(l => l.PostId == postId))
+			{
+				return true;
+			}
+
+			return false;
+
+
 		}
 	}
 

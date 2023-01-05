@@ -39,7 +39,7 @@
 		/// </summary>
 		/// <param name="postId">Post's id.</param>
 
-		public Task<PostServiceModel> GetPostAsync(Guid postId);
+		public Task<ViewPostViewModel> GetPostAsync(Guid postId);
 
 		/// <summary>
 		/// Gets all posts.
@@ -49,5 +49,31 @@
 		/// <param name="postsPerPage">Posts per page.</param>
 
 		public PostQueryServiceModel All(string searchTerm = null, int currentPage = 1, int postsPerPage = 1);
+
+
+
+		/// <summary>
+		/// Allows a user to like a post.
+		/// </summary>
+		/// <param name="userId">User Id.</param>
+		/// <param name="postId">Post Id.</param>
+
+		public Task AddLikeToPost(string userId, Guid postId);
+
+		/// <summary>
+		/// Allows a user to remove his like from a post.
+		/// </summary>
+		/// <param name="userId">User Id.</param>
+		/// <param name="postId">Post Id.</param>
+
+		public Task RemoveLikeFromPost(string userId, Guid postId);
+
+		/// <summary>
+		/// Checks if the post is liked by a specific user.
+		/// </summary>
+		/// <param name="userId">User Id.</param>
+		/// <param name="postId">Post Id.</param>
+
+		public Task<bool> PostIsLikedByUser(string userId, Guid postId);
 	}
 }

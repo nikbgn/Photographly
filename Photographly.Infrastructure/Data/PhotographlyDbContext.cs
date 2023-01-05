@@ -19,7 +19,10 @@
 			builder.Entity<UserPost>()
 				.HasKey(x => new { x.UserId, x.PostId });
 
-            base.OnModelCreating(builder);
+			builder.Entity<UserLikes>()
+				.HasKey(x => new { x.UserId, x.PostId });
+
+			base.OnModelCreating(builder);
         }
     }
 }
