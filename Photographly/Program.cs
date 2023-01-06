@@ -3,6 +3,8 @@ using Microsoft.EntityFrameworkCore;
 using Photographly.Infrastructure.Data;
 using Photographly.Infrastructure.Data.Models;
 
+using Photographly.Hubs;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -21,6 +23,7 @@ builder.Services.AddDefaultIdentity<User>(options =>
 	.AddEntityFrameworkStores<PhotographlyDbContext>();
 builder.Services.AddControllersWithViews();
 builder.Services.AddApplicationServices();
+builder.Services.AddSignalR();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -52,4 +55,5 @@ app.MapControllerRoute(
 	pattern: "{controller=Home}/{action=Index}/{id?}");
 app.MapRazorPages();
 
+app.MapHub<ConnectedHub>("/Chat/ConnectedHub");
 app.Run();

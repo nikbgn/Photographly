@@ -1,0 +1,36 @@
+﻿@{
+	ViewData["Title"] = "All chat.";
+}
+
+<div class="row">
+	<div class="col-6">
+		<div id="messagesList" style="overflow: auto; height: 18rem;"></div>
+	</div>
+</div>
+
+<div class="row">
+	<div class="col-12">
+		<hr />
+	</div>
+</div>
+
+
+
+
+<div class="container">
+	<input hidden value=@TempData["currUser"] id="userInput" />
+	<div>
+		<label class="form-label" for="textAreaExample">Type your message 💬</label>
+		<textarea class="form-control" id="messageInput" rows="4"></textarea>
+	</div>
+	<div class="row mt-3">
+		<div class="col-6">
+			<input type="button" class="btn btn-sm btn-success" id="sendButton" value="Send Message" />
+		</div>
+	</div>
+</div>
+
+
+
+<script src="~/js/signalr/dist/browser/signalr.js"></script>
+<script src="~/js/clientHub.js"></script>

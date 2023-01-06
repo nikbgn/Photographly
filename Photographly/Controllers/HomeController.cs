@@ -32,7 +32,7 @@
 					query.PostsPerPage);
 
 			query.TotalPostsCount = posts.TotalPostsCount;
-			query.Posts = posts.Posts;
+			query.Posts = posts.Posts.OrderByDescending(p => p.CreatedOn);
 
 			return View(query);
 		}

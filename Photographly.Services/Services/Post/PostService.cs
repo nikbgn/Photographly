@@ -249,7 +249,8 @@
 			}
 
 			var posts = postsQuery
-				.Skip((currentPage - 1) * postsPerPage)
+                .OrderByDescending(p => p.CreatedOn)
+                .Skip((currentPage - 1) * postsPerPage)
 				.Take(postsPerPage)
 				.Select(p => new PostServiceModel
 				{
@@ -267,8 +268,8 @@
 			return new PostQueryServiceModel()
 			{
 				TotalPostsCount = totalPosts,
-				Posts = posts
-			};
+				Posts = posts.OrderByDescending(p => p.CreatedOn)
+            };
 		}
 
 
