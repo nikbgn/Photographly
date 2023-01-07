@@ -73,7 +73,7 @@
 					throw new Exception("User cannot delete other user's posts.");
 				}
 				await _postService.DeletePostAsync(postId);
-				return RedirectToAction(nameof(Index));
+				return RedirectToAction(nameof(MyPosts));
 			}
 			catch (Exception ex) { _logger.LogError($"ERROR MESSAGE: {ex.Message}"); return BadRequest(); }
 		}
