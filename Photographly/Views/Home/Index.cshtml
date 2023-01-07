@@ -43,7 +43,7 @@
 <div class="album py-5 push">
 	<div class="container">
 		<div class="row">
-			<div style="overflow: scroll; height:60rem;">
+			<div style="overflow: scroll; height:80rem;">
 			@foreach (var post in Model.Posts.OrderByDescending(p => p.CreatedOn))
 			{
 				<partial name="_PostPartial" model="@post" />
